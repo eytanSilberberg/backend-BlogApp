@@ -4,7 +4,7 @@ from pydantic.main import create_model
 
 
 class Post(BaseModel):
-    id: Optional[str] = None
+    id: Optional[str]
     title: str
     description: str
     image: str
@@ -36,8 +36,4 @@ def create_simple_response_model(name: str, data_model: Type[BaseModel]) -> Type
     return create_model(name, data=(data_model, ...), __base__=BaseResponse)
 
 
-PostToSaveResponse = create_simple_response_model('PostToSaveResponse', Post)
-PostToUpdateResponse = create_simple_response_model(
-    'PostToUpdateResponse', Post)
-PostToDeleteResponse = create_simple_response_model(
-    'PostToDeleteResponse', Post)
+ActionResponse = create_simple_response_model('ActionResponse', Post)

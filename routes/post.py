@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from models.post import Post, PostToSave, PostsResponse, PostResponse, PostToSaveResponse, PostToUpdateResponse, PostToDeleteResponse
+from models.post import Post, PostToSave, PostsResponse, PostResponse, ActionResponse
 from db import get_database
 from bson import ObjectId
 from typing import List
@@ -35,7 +35,7 @@ async def get_post_by_id(post_id: str, db):
 
 
 # Route to create a new post
-@router.post("/", response_model=PostToSaveResponse)
+@router.post("/", response_model=ActionResponse)
 async def create_post(post: PostToSave, db=Depends(get_database)):
     try:
         # Insert new post into the database
@@ -45,7 +45,7 @@ async def create_post(post: PostToSave, db=Depends(get_database)):
         modified_post = convert_post(post)
     except DatabaseError:
         raise HTTPException(status_code=500, detail="Database error")
-    return PostToSaveResponse(data=modified_post, status="success")
+    return ActionResponse(data=modified_post, status="success")
 
 
 # Route to get a specific post by ID
@@ -60,7 +60,7 @@ async def read_post(post_id: str, db=Depends(get_database)):
 
 
 # Route to update a specific post by ID
-@router.put("/{post_id}", response_model=PostToUpdateResponse)
+@router.put("/{post_id}", response_model=ActionResponse)
 async def update_post(post_id: str, post: Post, db=Depends(get_database)):
     try:
         existing_post = await get_post_by_id(post_id, db)
@@ -71,11 +71,11 @@ async def update_post(post_id: str, post: Post, db=Depends(get_database)):
         modified_post = convert_post(updated_post)
     except NotFoundError:
         raise HTTPException(status_code=404, detail="Post not found")
-    return PostToUpdateResponse(data=modified_post, status="success")
+    return ActionResponse(data=modified_post, status="success")
 
 
 # Route to delete a specific post by ID
-@router.delete("/{post_id}", response_model=PostToDeleteResponse)
+@router.delete("/{post_id}", response_model=ActionResponse)
 async def delete_post(post_id: str, db=Depends(get_database)):
     try:
         existing_post = await get_post_by_id(post_id, db)
@@ -83,7 +83,7 @@ async def delete_post(post_id: str, db=Depends(get_database)):
         modified_post = convert_post(existing_post)
     except NotFoundError:
         raise HTTPException(status_code=404, detail="Post not found")
-    return PostToDeleteResponse(data=modified_post, status="success")
+    return ActionResponse(data=modified_post, status="success")
 
 
 # Route to get a list of all posts
