@@ -1,5 +1,6 @@
-from typing import Optional
+from typing import Optional, Type
 from pydantic import BaseModel
+from pydantic.main import create_model
 
 
 class Post(BaseModel):
@@ -15,28 +16,28 @@ class PostToSave(BaseModel):
     image: str
 
 
-class PostsResponse(BaseModel):
+class BaseResponse(BaseModel):
+    status: str
+
+
+class TimeStampedResponse(BaseResponse):
+    timeStamp: float
+
+
+class PostsResponse(TimeStampedResponse):
     data: list[Post]
-    status: str
-    timeStamp: float
 
 
-class PostResponse(BaseModel):
+class PostResponse(TimeStampedResponse):
     data: Post
-    status: str
-    timeStamp: float
 
 
-class PostToSaveResponse(BaseModel):
-    data: Post
-    status: str
+def create_simple_response_model(name: str, data_model: Type[BaseModel]) -> Type[BaseModel]:
+    return create_model(name, data=(data_model, ...), __base__=BaseResponse)
 
 
-class PostToUpdateResponse(BaseModel):
-    data: Post
-    status: str
-
-
-class PostToDeleteResponse(BaseModel):
-    data: Post
-    status: str
+PostToSaveResponse = create_simple_response_model('PostToSaveResponse', Post)
+PostToUpdateResponse = create_simple_response_model(
+    'PostToUpdateResponse', Post)
+PostToDeleteResponse = create_simple_response_model(
+    'PostToDeleteResponse', Post)

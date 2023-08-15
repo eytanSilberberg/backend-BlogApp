@@ -1,18 +1,16 @@
 from fastapi import FastAPI
-from routes import post, homePageData
+from routes import api
 from fastapi.middleware.cors import CORSMiddleware
+from cors_config import get_cors_config
 
-
+# Create an instance of the FastAPI class
 app = FastAPI()
 
-app.add_middleware(
-    CORSMiddleware,
-    # Replace with your frontend URL (e.g., ["http://localhost:3000"])
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
+# Call the 'get_cors_config' function to get the CORS configuration settings
+cors_config = get_cors_config()
 
-app.include_router(post.router, prefix="/api/v1")
-app.include_router(homePageData.router, prefix="/api/v1")
+# Add the CORS middleware to the FastAPI application
+app.add_middleware(CORSMiddleware, **cors_config)
+
+# Include the API routes
+app.include_router(api.router, prefix="/api/v1")
