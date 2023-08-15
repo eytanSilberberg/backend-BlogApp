@@ -9,7 +9,7 @@ This is a project replika for the backend that was deployed in detaSpace
 Moved CORS configuration to a separate get_cors_config() function, allowing easy updates to CORS settings in one place.
 
 - <h4>Cleaned and Organized Imports:</h4>
-Organized import statements in a clean and readable manner as per Python's PEP 8 style guide.
+Organized import statements.
 
 - <h4>Added Middleware in a Structured Way:</h4>
 
@@ -45,14 +45,8 @@ Replace print statements with proper logging. This will create structured, persi
 - <h4>Move Data Transformation Logic to Models:</h4>
 Moving data transformation logic, such as ID conversion and timestamp addition, to Pydantic models will centralize the data handling and make the route functions cleaner.
 
-- <h4>Check Data Existence Before Manipulating:</h4>
-Move the check for None up to avoid a NoneType error during manipulation like pop.
-
 - <h4>Avoid Repeated Code for ID Conversion:</h4>
-Consider creating a helper function to convert the ID, which can then be reused across different routes.
-
-- <h4>Consistent Timestamp Generation:</h4>
-Generate a timestamp once and use it consistently within a request, rather than generating new ones multiple times.
+created a helper function to convert the ID.
 
 ### Home Page data
 
